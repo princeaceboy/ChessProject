@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -59,7 +61,12 @@ public class BoardGUI {
 
         JButton[][] squares = new JButton[8][8];
         Border emptyBorder = BorderFactory.createEmptyBorder();
+        ComponentMover cm = new ComponentMover();
 
+        JLayeredPane [][] sharedPanel = new JLayeredPane[9][9];
+        sharedPanel[0][0] = new JLayeredPane();
+        
+        
         for (int row = 0; row < squares.length; row++) {
             for (int col = 0; col < squares[row].length; col++) {
 
@@ -81,15 +88,23 @@ public class BoardGUI {
                 }
                 squares[row][col] = tempButton;
                 squares[row][col].addActionListener(actionListener);
-                panel.add(squares[row][col]);
+                sharedPanel[0][0].add(squares[row][col]);
 
-                squares[0][0].setIcon(new ImageIcon(BoardGUI.class.getResource("knight4.png"), "knight"));
-
-
-          
+                //squares[0][0].setIcon(new ImageIcon(BoardGUI.class.getResource("knight4.png"), "knight"));
+                cm.registerComponent(sharedPanel[0][0]);
             }
         }
 
+        ImageIcon icon = new ImageIcon(BoardGUI.class.getResource("knight4.png"), "knight");
+        JLabel thumb = new JLabel();
+        thumb.setIcon(icon);
+        sharedPanel[0][0].add(thumb);
+        cm.registerComponent(thumb);
+     
+
+        
+        panel.add(sharedPanel[0][0]);
+        //Moving images
         frame.pack();
         frame.add(mainPanel);
         frame.setResizable(false);
